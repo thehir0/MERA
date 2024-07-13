@@ -290,6 +290,7 @@ class HuggingFaceAutoLM(BaseLM):
                         model_kwargs["bnb_4bit_compute_dtype"] = _get_dtype(bnb_4bit_compute_dtype)
             model = self.AUTO_MODEL_CLASS.from_pretrained(
                 pretrained,
+                attn_implementation = 'flash_attention_2',
                 revision=revision + ("/" + subfolder if subfolder is not None else ""),
                 device_map=device_map,
                 max_memory=max_memory,
@@ -351,6 +352,7 @@ class HuggingFaceAutoLM(BaseLM):
         )
         tokenizer.padding_side = padding_side
         tokenizer.truncation_side = truncation_side
+        tokenizer.pad_token = tokenizer.eos_token
         return tokenizer
 
     @property
